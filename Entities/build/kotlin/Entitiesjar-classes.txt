@@ -1,0 +1,1 @@
+/Users/develop/BaseAppClean/BaseApp2/Entities/build/classes/kotlin/main/com/example/entities/Carloncha.class

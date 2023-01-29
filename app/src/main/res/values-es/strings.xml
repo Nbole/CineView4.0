@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BaseApp</string>
+    <string name="buscar_pelicula">Buscar película</string>
+    <string name="action_settings">Settings</string>
+    <string name="busqueda">Busqueda</string>
+    <string name="pelicula_agregada">Película agregada a favoritos</string>
+    <string name="pelicula_removida">Película removida de favoritos</string>
+    <string name="validate">Buscar</string>
+    <string name="favourite">Favoritos</string>
+    <string name="add_more_movies">No hay películas en favoritos</string>
+    <string name="accept">Aceptar</string>
+</resources>

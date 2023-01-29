@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../../layout/compose-model-1652550230122.xml" value="0.19847972972972974" />
+        <entry key="../../../../layout/compose-model-1652550311786.xml" value="1.0" />
+        <entry key="../../../../layout/compose-model-1652560226825.xml" value="0.1" />
+        <entry key="..\:/Users/NBole/BaseApp/app/src/main/res/layout/activity_main.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/NBole/BaseApp/app/src/main/res/layout/content_main.xml" value="0.209375" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.19010416666666666" />
+        <entry key="app/src/main/res/layout/favorite_fragment.xml" value="0.2671875" />
+        <entry key="app/src/main/res/layout/favorites_fragment.xml" value="0.16458333333333333" />
+        <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.3515675862630208" />
+        <entry key="app/src/main/res/layout/fragment_first.xml" value="0.2671875" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.2671875" />
+        <entry key="app/src/main/res/layout/fragment_second.xml" value="0.2671875" />
+        <entry key="app/src/main/res/layout/home_fragment.xml" value="0.165625" />
+        <entry key="app/src/main/res/layout/home_fragments.xml" value="0.26614583333333336" />
+        <entry key="app/src/main/res/layout/list_item_header.xml" value="0.23697916666666666" />
+        <entry key="app/src/main/res/layout/list_item_movie.xml" value="0.2125" />
+        <entry key="app/src/main/res/layout/search_fragment.xml" value="0.3734375" />
+        <entry key="app/src/main/res/menu/menu_main.xml" value="0.2125" />
+        <entry key="base/src/main/res/layout/activity_main.xml" value="0.28177083333333336" />
+        <entry key="base/src/main/res/layout/home_fragment.xml" value="0.215625" />
+        <entry key="base/src/main/res/layout/list_item_movie.xml" value="0.21458333333333332" />
+        <entry key="base/src/main/res/menu/menu.xml" value="0.215625" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

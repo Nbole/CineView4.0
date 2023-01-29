@@ -1,0 +1,8 @@
+CREATE TABLE FieldEntity (
+  id INTEGER NOT NULL PRIMARY KEY,
+  healidine TEXT,
+  body TEXT,
+  thumbnail TEXT,
+  startRating INTEGER NOT NULL
+);
+
