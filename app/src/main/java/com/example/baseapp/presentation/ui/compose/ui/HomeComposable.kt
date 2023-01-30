@@ -30,6 +30,7 @@ import com.example.baseapp.presentation.ui.compose.core.TextFieldComposable
 import com.example.baseapp.presentation.ui.compose.theme.Blue
 import com.example.baseapp.presentation.ui.compose.theme.GreenB
 import com.example.baseapp.presentation.ui.compose.theme.LightGrey
+import com.example.baseapp.presentation.ui.compose.theme.Yellow
 import com.example.baseapp.presentation.vm.StateUi
 
 @Composable
@@ -39,7 +40,7 @@ fun HomeComposable(stateUi: StateUi.ShowMovies) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = GreenB)
+            .background(color = Yellow)
     ) {
         states.value = stateUi
         val state = rememberLazyListState()
@@ -48,7 +49,7 @@ fun HomeComposable(stateUi: StateUi.ShowMovies) {
         Column(Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
-                    .background(GreenB)
+                    .background(Yellow)
                     .padding(10.dp)
             ) {
                 Column {
@@ -67,7 +68,7 @@ fun HomeComposable(stateUi: StateUi.ShowMovies) {
                 LazyColumn(
                     state = state,
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .clip(RoundedCornerShape(10.dp))
                         .background(Color.White)
                         .padding(10.dp)
@@ -119,7 +120,6 @@ fun DismissText(
     indexProvider: () -> Int,
 ) {
     val s: Float = if (indexProvider() == 0) scrollProvider().toFloat() / 100F else 0F
-
     Text(
         text = "CineView 4.0",
         color = Color.White,

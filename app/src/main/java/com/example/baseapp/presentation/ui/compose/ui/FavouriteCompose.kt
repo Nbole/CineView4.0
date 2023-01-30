@@ -34,8 +34,8 @@ import com.example.baseapp.presentation.ui.compose.core.Paragraphs
 import com.example.baseapp.presentation.ui.compose.core.SnackBar
 import com.example.baseapp.presentation.ui.compose.theme.Blue
 import com.example.baseapp.presentation.ui.compose.theme.DesignTheme
-import com.example.baseapp.presentation.ui.compose.theme.GreenB
 import com.example.baseapp.presentation.ui.compose.theme.LightGrey
+import com.example.baseapp.presentation.ui.compose.theme.Yellow
 import com.example.baseapp.presentation.vm.FavouriteStateUi
 
 @Composable
@@ -54,7 +54,7 @@ fun FavouriteCompose(stateUi: FavouriteStateUi.ShowMovies) {
         Column(
             Modifier
                 .fillMaxSize()
-                .background(color = GreenB)
+                .background(color = Yellow)
         ) {
             TopBarComposable({ state.firstVisibleItemScrollOffset }) { state.firstVisibleItemIndex }
             if (stateUi.movies.isNullOrEmpty()) {

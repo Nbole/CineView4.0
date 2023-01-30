@@ -20,14 +20,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import com.example.baseapp.R
 import com.example.baseapp.presentation.model.SearchModel
 import com.example.baseapp.presentation.ui.compose.core.Paragraphs.ParagraphLight
 import com.example.baseapp.presentation.ui.compose.core.Styles.editTextStyle
-import com.example.baseapp.presentation.ui.compose.theme.GreenB
+import com.example.baseapp.presentation.ui.compose.theme.Yellow
 
 @Composable
 fun TextFieldComposable(
@@ -75,7 +74,7 @@ fun CollapsingTextField(
                 )
                 .height(50.dp)
                 .fillMaxWidth()
-                .border(width = 0.dp, color = GreenB, shape = RoundedCornerShape(6.dp)),
+                .border(width = 0.dp, color = Yellow, shape = RoundedCornerShape(6.dp)),
             value = searchModel.searchText.orEmpty(),
             onValueChange = {
                 searchModel.searchActionable(it)
@@ -108,7 +107,7 @@ fun CollapsingTextField(
                         },
                     text = stringResource(id = R.string.accept),
                     paragraphSize = Paragraphs.ParagraphSize.PARAGRAPH_12_SP,
-                    color = colorResource(id = R.color.green_20bf62)
+                    color = colorResource(id = R.color.yellow_fee440)
                 )
             },
             colors = editTextStyle()
