@@ -20,6 +20,6 @@ class SearchUseCaseImpl @Inject constructor(
         if (query.isEmpty()) {
             movieRepository.getLatestMovies()
         } else {
-            movieRepository.searchMovies(query).flowOn(dispatcher.io)
+            movieRepository.searchMovies(query)
         }.flowOn(dispatcher.io)
 }

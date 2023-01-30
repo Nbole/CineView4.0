@@ -25,43 +25,42 @@ class FavoriteViewModel @Inject constructor(
     private val _snackBar: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _movies: MutableStateFlow<List<Int>> = MutableStateFlow(listOf())
 
-    val favoriteMovies: StateFlow<ShowMovies> =
-        combine(
-            _snackBar,
-            favoriteUseCase.getFavorites(),
-            _movies
-        ) { snackBar, result, movies ->
-            ShowMovies(
-                movies = result.map {
-                    MovieCardModel(
-                        id = it.id,
-                        text = it.title,
-                        poster = it.posterPath,
-                        isFavourite = it.isFavourite,
-                        releaseDate = it.releaseDate,
-                        overView = it.overview,
-                        mustShowDetail = movies.contains(it.id),
-                        showDetail = { id ->
-                            _movies.value = if (movies.contains(id)) {
-                                movies.filter { v -> v != id }
-                            } else {
-                                movies.plus(id)
-                            }
+    val favoriteMovies: StateFlow<ShowMovies> = combine(
+        _snackBar,
+        favoriteUseCase.getFavorites(),
+        _movies
+    ) { snackBar, result, movies ->
+        ShowMovies(
+            movies = result.map {
+                MovieCardModel(
+                    id = it.id,
+                    text = it.title,
+                    poster = it.posterPath,
+                    isFavourite = it.isFavourite,
+                    releaseDate = it.releaseDate,
+                    overView = it.overview,
+                    mustShowDetail = movies.contains(it.id),
+                    showDetail = { id ->
+                        _movies.value = if (movies.contains(id)) {
+                            movies.filter { v -> v != id }
+                        } else {
+                            movies.plus(id)
                         }
-                    ) { id, _ ->
-                        setFavouriteId(id)
-                        _snackBar.value = true
                     }
-                },
-                snackBarModel = SnackBarModel(snackBar) {
-                    _snackBar.value = false
+                ) { id, _ ->
+                    setFavouriteId(id)
+                    _snackBar.value = true
                 }
-            )
-        }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(),
-            ShowMovies(movies = null, snackBarModel = SnackBarModel(false) {})
+            },
+            snackBarModel = SnackBarModel(snackBar) {
+                _snackBar.value = false
+            }
         )
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(),
+        ShowMovies(movies = listOf(), snackBarModel = SnackBarModel(false) {})
+    )
 
     private fun setFavouriteId(id: Int) {
         viewModelScope.launch(Dispatchers.Default) {

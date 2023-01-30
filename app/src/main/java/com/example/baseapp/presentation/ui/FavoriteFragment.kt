@@ -1,6 +1,7 @@
 package com.example.baseapp.presentation.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +33,7 @@ class FavoriteFragment : Fragment() {
         binding.cviewListing.setContent {
             DesignTheme {
                 val state = viewModel.favoriteMovies.collectAsState()
-                FavouriteCompose { state.value }
+                FavouriteCompose (state.value)
             }
         }
     }

@@ -67,7 +67,7 @@ class HomeViewModel @Inject constructor(
                             overView = it.overview,
                             mustShowDetail = movies.contains(it.id),
                             showDetail = { id ->
-                               _movies.value = if (movies.contains(id)) {
+                                _movies.value = if (movies.contains(id)) {
                                     movies.filter { v -> v != id }
                                 } else {
                                     movies.plus(id)
@@ -88,8 +88,8 @@ class HomeViewModel @Inject constructor(
                         enabled = true,
                         validateOrRemove = true,
                         searchText = searchText,
-                        searchActionable = { _searchText.value = it },
-                        acceptActionable = { _queryText.value = it }
+                        searchActionable = { },
+                        acceptActionable = { }
                     )
                 )
                 is DomainResponse.Success -> ShowMovies(
@@ -123,7 +123,9 @@ class HomeViewModel @Inject constructor(
                         enabled = true,
                         validateOrRemove = true,
                         searchText = searchText,
-                        searchActionable = { _searchText.value = it },
+                        searchActionable = {
+                            _searchText.value = it
+                        },
                         acceptActionable = {
                             _queryText.value = it
                             savedStateHandle["query"] = it

@@ -1,7 +1,6 @@
 package com.example.baseapp.presentation.ui.compose.ui
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,16 +11,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.baseapp.R
-import com.example.baseapp.presentation.model.SearchModel
-import com.example.baseapp.presentation.ui.compose.theme.DesignTheme
 import com.example.baseapp.presentation.ui.compose.core.LoadingDialog
 import com.example.baseapp.presentation.ui.compose.core.SnackBar
 import com.example.baseapp.presentation.ui.compose.core.TextFieldComposable
@@ -30,29 +32,38 @@ import com.example.baseapp.presentation.ui.compose.theme.GreenB
 import com.example.baseapp.presentation.ui.compose.theme.LightGrey
 import com.example.baseapp.presentation.vm.StateUi
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun HomeComposable(stateUi: () -> StateUi.ShowMovies) {
+fun HomeComposable(stateUi: StateUi.ShowMovies) {
+    val states = remember { mutableStateOf(stateUi) }
+    SideEffect { Log.d("NB", "HomeComposableRecompositions") }
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(color = GreenB)
     ) {
+        states.value = stateUi
         val state = rememberLazyListState()
-        if (stateUi().isLoading) LoadingDialog {}
+        if (stateUi.isLoading) LoadingDialog {}
+
         Column(Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
                     .background(GreenB)
                     .padding(10.dp)
             ) {
-                TextFieldComposable(
-                    searchModel = stateUi().searchModel,
-                    scrollProvider = { state.firstVisibleItemScrollOffset },
-                    indexProvider = { state.firstVisibleItemIndex }
-                )
+                Column {
+                    DismissText(
+                        scrollProvider = { state.firstVisibleItemScrollOffset },
+                        indexProvider = { state.firstVisibleItemIndex }
+                    )
+                    TextFieldComposable(
+                        searchModel = { states.value.searchModel },
+                        scrollProvider = { state.firstVisibleItemScrollOffset },
+                        indexProvider = { state.firstVisibleItemIndex }
+                    )
+                }
             }
-            if (stateUi().movies.isNotEmpty()) {
+            if (stateUi.movies.isNotEmpty()) {
                 LazyColumn(
                     state = state,
                     modifier = Modifier
@@ -62,13 +73,10 @@ fun HomeComposable(stateUi: () -> StateUi.ShowMovies) {
                         .padding(10.dp)
                 ) {
                     items(
-                        items = stateUi().movies,
+                        items = stateUi.movies,
                         key = { cardModel -> cardModel.id }
                     ) { item ->
                         MovieCard { item }
-                        /*AnimatedContent(targetState = item.mustShowDetail) {
-                            if (!it) SimplifiedMovieCard { item } else MovieCard { item }
-                        }*/
                     }
                 }
             } else {
@@ -81,7 +89,7 @@ fun HomeComposable(stateUi: () -> StateUi.ShowMovies) {
                 )
             }
         }
-        val snackBarModel = stateUi().snackBarModel
+        val snackBarModel = states.value.snackBarModel
         if (snackBarModel?.addOrRemoveMovie != null) {
             Box(
                 modifier = Modifier
@@ -105,6 +113,24 @@ fun HomeComposable(stateUi: () -> StateUi.ShowMovies) {
     }
 }
 
+@Composable
+fun DismissText(
+    scrollProvider: () -> Int,
+    indexProvider: () -> Int,
+) {
+    val s: Float = if (indexProvider() == 0) scrollProvider().toFloat() / 100F else 0F
+
+    Text(
+        text = "CineView 4.0",
+        color = Color.White,
+        fontSize = 30.sp,
+        modifier = Modifier.graphicsLayer {
+            alpha = 1 - s
+        }
+    )
+}
+
+/*
 @Preview
 @Composable
 fun PreviewHomeComposable() {
@@ -129,3 +155,4 @@ fun PreviewHomeComposable() {
         }
     }
 }
+*/

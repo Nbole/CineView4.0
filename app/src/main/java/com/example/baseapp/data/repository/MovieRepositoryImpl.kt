@@ -28,7 +28,7 @@ class MovieRepositoryImpl @Inject constructor(
                 val movies: List<Movie> = (response as SerialResponse.Success).data.results
                 val favourites: List<Int> =
                     db.loadFavoriteMoviesIds().firstOrNull().orEmpty().map { it.movieId }
-
+                db.deleteMovies()
                 if (movies.isNotEmpty()) {
                     db.saveMovies(
                         movies.map {
@@ -42,8 +42,6 @@ class MovieRepositoryImpl @Inject constructor(
                             )
                         }
                     )
-                } else {
-                    db.deleteMovies()
                 }
             }
         ).map { w ->

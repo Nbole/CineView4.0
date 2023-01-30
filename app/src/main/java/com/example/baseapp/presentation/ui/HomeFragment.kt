@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
             val stateUi = viewModel.latestMovies.collectAsState().value
             DesignTheme {
                 if (stateUi is StateUi.ShowMovies) {
-                    HomeComposable { stateUi }
+                    HomeComposable (stateUi)
                 }
             }
         }

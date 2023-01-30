@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,26 +30,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import com.example.baseapp.R
 import com.example.baseapp.presentation.model.SnackBarModel
-import com.example.baseapp.presentation.ui.compose.theme.DesignTheme
 import com.example.baseapp.presentation.ui.compose.core.Paragraphs
 import com.example.baseapp.presentation.ui.compose.core.SnackBar
 import com.example.baseapp.presentation.ui.compose.theme.Blue
+import com.example.baseapp.presentation.ui.compose.theme.DesignTheme
 import com.example.baseapp.presentation.ui.compose.theme.GreenB
 import com.example.baseapp.presentation.ui.compose.theme.LightGrey
 import com.example.baseapp.presentation.vm.FavouriteStateUi
 
 @Composable
-fun FavouriteCompose(stateUi: () -> FavouriteStateUi.ShowMovies) {
-    Box(Modifier.fillMaxSize()) {
+fun FavouriteCompose(stateUi: FavouriteStateUi.ShowMovies) {
+    val movieState = remember {
+        mutableStateOf(stateUi)
+    }
+    SideEffect {
+        Log.d("NB", "favouriteComposeRecomposition")
+    }
+    Box(
+       modifier = Modifier.fillMaxSize()
+    ) {
         val state = rememberLazyListState()
-        val movies: FavouriteStateUi.ShowMovies = stateUi()
+        movieState.value = stateUi
         Column(
             Modifier
                 .fillMaxSize()
                 .background(color = GreenB)
         ) {
             TopBarComposable({ state.firstVisibleItemScrollOffset }) { state.firstVisibleItemIndex }
-            if (movies.movies.isNullOrEmpty()) {
+            if (stateUi.movies.isNullOrEmpty()) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
@@ -82,7 +92,7 @@ fun FavouriteCompose(stateUi: () -> FavouriteStateUi.ShowMovies) {
                         .padding(10.dp)
                 ) {
                     items(
-                        items = movies.movies,
+                        items = movieState.value.movies.orEmpty(),
                         key = { cardModel -> cardModel.id }
                     ) { item ->
                         MovieCard { item }
@@ -90,7 +100,7 @@ fun FavouriteCompose(stateUi: () -> FavouriteStateUi.ShowMovies) {
                 }
             }
         }
-        val snackBarModel = movies.snackBarModel
+        val snackBarModel = movieState.value.snackBarModel
         if (snackBarModel.addOrRemoveMovie == true) {
             Box(
                 modifier = Modifier
@@ -133,7 +143,6 @@ fun TopBarComposable(
     }
 }
 
-
 @Composable
 fun CollapsingToolBar(
     scrollProvider: () -> Int,
@@ -143,39 +152,39 @@ fun CollapsingToolBar(
     content: @Composable () -> Unit,
 ) {
     val collapseRange: Float = with(LocalDensity.current) { (defaultSize - 55.dp).toPx() }
-    SideEffect { Log.d("NB", "collapsingLayout recompose") }
     Layout(
         modifier = modifier,
         content = content
     ) { measureables, constraints ->
         check(measureables.size == 1)
         val s: Float = if (indexProvider() == 0) scrollProvider().toFloat() else 0F
-        val collapseFractionProvider = (s/collapseRange).coerceIn(0f, 1f)
+        val collapseFractionProvider = (s / collapseRange).coerceIn(0f, 1f)
 
-        val imageY = if (indexProvider() >= 1 ) {
+        val imageY = if (indexProvider() >= 1) {
             55.dp.roundToPx()
         } else {
             lerp(defaultSize, 55.dp, collapseFractionProvider).roundToPx()
         }
 
-        val imgHeight = if (indexProvider() >= 1 ) {
+        val imgHeight = if (indexProvider() >= 1) {
             0.dp.roundToPx()
         } else {
             lerp(40.dp, 0.dp, collapseFractionProvider).roundToPx()
         }
 
-        val imagePlaceable = measureables[0].measure(Constraints.fixed(constraints.maxWidth, 80.dp.roundToPx()))
+        val imagePlaceable =
+            measureables[0].measure(Constraints.fixed(constraints.maxWidth, 80.dp.roundToPx()))
 
         val imageX = lerp(
             0.dp,
-            (constraints.maxWidth).toDp() - 140.dp,
+            (constraints.maxWidth).toDp() - 180.dp,
             if (indexProvider() == 0) collapseFractionProvider else 1f
         )
         layout(
             width = constraints.maxWidth,
             height = imageY
         ) {
-            imagePlaceable.placeRelative(imageX.roundToPx(),imgHeight)
+            imagePlaceable.placeRelative(imageX.roundToPx(), imgHeight)
         }
     }
 }
@@ -184,11 +193,8 @@ fun CollapsingToolBar(
 @Composable
 fun PreviewFavouriteCompose() {
     DesignTheme {
-        FavouriteCompose {
-            FavouriteStateUi.ShowMovies(
-                movies = null,
-                snackBarModel = SnackBarModel(null) {}
-            )
-        }
+        FavouriteCompose(
+            FavouriteStateUi.ShowMovies(movies = null, snackBarModel = SnackBarModel(null) {})
+        )
     }
 }
