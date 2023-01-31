@@ -9,4 +9,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "BaseApp"
 include ':app'
-include ':base'

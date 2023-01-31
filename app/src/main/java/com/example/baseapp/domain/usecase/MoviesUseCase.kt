@@ -1,6 +1,6 @@
 package com.example.baseapp.domain.usecase
 
-import com.example.base.di.DispatchersProvider
+import com.example.baseapp.data.di.DispatchersProvider
 import com.example.baseapp.domain.MovieRepository
 import com.example.baseapp.domain.model.vo.DomainResponse
 import com.example.baseapp.domain.model.vo.MovieResult

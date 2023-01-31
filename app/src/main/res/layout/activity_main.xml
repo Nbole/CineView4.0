@@ -21,6 +21,6 @@
             android:elevation="8dp"
             app:itemIconSize="30dp"
             app:labelVisibilityMode="unlabeled"
-            app:menu="@menu/menu" />
+            app:menu="@menu/menu_main" />
     </FrameLayout>
 </layout>

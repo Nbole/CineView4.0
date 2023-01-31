@@ -9,4 +9,6 @@
     <string name="favourite">Favourites</string>
     <string name="add_more_movies">No movies added</string>
     <string name="accept">Accept</string>
+    <string name="home">Home</string>
+    <string name="favourites">Favourites</string>
 </resources>

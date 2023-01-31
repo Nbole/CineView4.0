@@ -2,8 +2,6 @@ package com.example.baseapp.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.base.di.DispatchersProvider
-import com.example.base.di.Dispatcherss
 import com.example.baseapp.data.local.model.MovieDb
 import com.example.baseapp.data.remote.MovieDataSourceImpl
 import com.example.baseapp.data.repository.MovieRepositoryImpl
@@ -22,6 +20,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
@@ -33,7 +33,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideDispatchers(): DispatchersProvider = Dispatcherss()
+    fun provideDispatchers(): DispatchersProvider = Dispatchers()
 
     @Provides
     @Singleton
@@ -84,4 +84,19 @@ class AppModule {
     ): UpdateMovieUseCase = UpdateMovieUseCaseImpl(
         movieRepositoryImpl,
     )
+}
+
+interface DispatchersProvider {
+    val main: CoroutineDispatcher
+    val default: CoroutineDispatcher
+    val io: CoroutineDispatcher
+}
+
+class Dispatchers : DispatchersProvider {
+    override val main: CoroutineDispatcher
+        get() = Dispatchers.Main
+    override val default: CoroutineDispatcher
+        get() = Dispatchers.Default
+    override val io: CoroutineDispatcher
+        get() = Dispatchers.IO
 }

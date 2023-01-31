@@ -80,7 +80,7 @@ fun MovieCard(movieCardModel: () -> MovieCardModel) {
             ClickableIcon(
                 modifier = Modifier.padding(top = 10.dp, end = 10.dp).bounceClick(true),
                 icon = if (movieCardModel().isFavourite) {
-                    R.drawable.ic_baseline_favorite_24
+                    R.drawable.ic_baseline_favorite_border_24
                 } else {
                     R.drawable.ic_baseline_favorite_border_24
                 },
