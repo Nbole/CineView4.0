@@ -1,4 +1,4 @@
-package com.example.baseapp.presentation.ui.compose.ui.providers
+package com.example.baseapp.presentation.ui.compose.ui.preview_providers
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.example.baseapp.R
