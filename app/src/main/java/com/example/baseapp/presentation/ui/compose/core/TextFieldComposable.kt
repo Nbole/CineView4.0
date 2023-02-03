@@ -9,24 +9,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.lerp
 import com.example.baseapp.R
 import com.example.baseapp.presentation.model.SearchModel
 import com.example.baseapp.presentation.ui.compose.core.Paragraphs.ParagraphLight
-import com.example.baseapp.presentation.ui.compose.core.Styles.editTextStyle
+import com.example.baseapp.presentation.ui.compose.theme.Styles.editTextStyle
 import com.example.baseapp.presentation.ui.compose.theme.Yellow
+import com.example.baseapp.presentation.ui.compose.ui.providers.SearchModelProvider
 
 @Composable
 fun TextFieldComposable(
@@ -47,119 +44,22 @@ fun TextFieldComposable(
     }
 }
 
+@Preview
 @Composable
-fun CollapsingTextField(
-    searchModelProvider: () -> SearchModel,
-    scrollProvider: () -> Int,
-    indexProvider: () -> Int,
+fun TextFieldComposablePreview(
+    @PreviewParameter(SearchModelProvider::class) previewParameter: SearchModel,
 ) {
-    val searchModel = searchModelProvider.invoke()
-    CollapsingLayout(
-        scrollProvider = scrollProvider,
-        indexProvider = indexProvider,
-    ) {
-        TextField(
-            singleLine = true,
-            modifier = Modifier
-                .clip(RoundedCornerShape(7.dp))
-                .clickable(enabled = searchModel.enabled, null, null) {}
-                .background(
-                    colorResource(
-                        if (!searchModel.searchText.isNullOrEmpty()) {
-                            R.color.white_ffffff
-                        } else {
-                            R.color.grey_f6f7fc
-                        }
-                    )
-                )
-                .height(50.dp)
-                .fillMaxWidth()
-                .border(width = 0.dp, color = Yellow, shape = RoundedCornerShape(6.dp)),
-            value = searchModel.searchText.orEmpty(),
-            onValueChange = {
-                searchModel.searchActionable(it)
+    MaterialTheme {
+        TextFieldComposable(
+            {
+                previewParameter
             },
-            label = {
-                ParagraphLight(
-                    color = colorResource(
-                        id = if (searchModel.errorResource != null) {
-                            R.color.red_ff2d31
-                        } else {
-                            R.color.grey_989fb3
-                        }
-                    ),
-                    text = stringResource(id = searchModel.labelResource),
-                    paragraphSize = Paragraphs.ParagraphSize.PARAGRAPH_14_SP
-                )
+            {
+                1
             },
-            leadingIcon = {
-                NonClickableIcon(
-                    icon = R.drawable.ic_baseline_search_24,
-                    iconColor = colorResource(id = R.color.grey_a2a8bc)
-                )
-            },
-            trailingIcon = {
-                ParagraphLight(
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .clickable {
-                            searchModel.acceptActionable.invoke(searchModel.searchText.orEmpty())
-                        },
-                    text = stringResource(id = R.string.accept),
-                    paragraphSize = Paragraphs.ParagraphSize.PARAGRAPH_12_SP,
-                    color = colorResource(id = R.color.yellow_fee440)
-                )
-            },
-            colors = editTextStyle()
+            {
+                1
+            }
         )
     }
 }
-
-@Composable
-fun CollapsingLayout(
-    scrollProvider: () -> Int,
-    indexProvider: () -> Int,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
-) {
-    val collapseRange: Float = with(LocalDensity.current) { (60.dp - 10.dp).toPx() }
-    Layout(
-        modifier = modifier,
-        content = content
-    ) { measureables, constraints ->
-        check(measureables.size == 1)
-        val s: Float = if (indexProvider() == 0) scrollProvider().toFloat() else 0F
-        val collapseFractionProvider = (s / collapseRange).coerceIn(0f, 1f)
-
-        val imageY = if (indexProvider() >= 1) {
-            10.dp.roundToPx()
-        } else {
-            lerp(60.dp, 10.dp, collapseFractionProvider).roundToPx()
-        }
-
-        val imagePlaceable = measureables[0].measure(
-            Constraints.fixed(constraints.maxWidth, 50.dp.roundToPx())
-        )
-
-        layout(
-            width = constraints.maxWidth,
-            height = imageY
-        ) {
-            imagePlaceable.placeRelative(0.dp.roundToPx(), imageY - 50.dp.roundToPx())
-        }
-    }
-}
-
-object Styles {
-    @Composable
-    fun editTextStyle() = TextFieldDefaults.textFieldColors(
-        textColor = colorResource(id = R.color.grey_989fb3),
-        backgroundColor = Color.Transparent,
-        cursorColor = colorResource(id = R.color.grey_989fb3),
-        focusedIndicatorColor = Color.Transparent,
-        unfocusedIndicatorColor = Color.Transparent,
-        disabledIndicatorColor = Color.Transparent,
-        disabledTextColor = Color.Transparent,
-    )
-}
-

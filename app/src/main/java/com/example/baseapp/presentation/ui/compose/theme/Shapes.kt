@@ -1,4 +1,4 @@
-package com.example.baseapp.presentation.ui.compose
+package com.example.baseapp.presentation.ui.compose.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp

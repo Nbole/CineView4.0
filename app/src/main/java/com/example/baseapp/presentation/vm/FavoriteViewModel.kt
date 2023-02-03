@@ -2,6 +2,7 @@ package com.example.baseapp.presentation.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.baseapp.domain.model.vo.DomainResponse
 import com.example.baseapp.domain.usecase.FavoriteUseCase
 import com.example.baseapp.domain.usecase.UpdateMovieUseCase
 import com.example.baseapp.presentation.model.MovieCardModel
@@ -25,41 +26,47 @@ class FavoriteViewModel @Inject constructor(
     private val _snackBar: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _movies: MutableStateFlow<List<Int>> = MutableStateFlow(listOf())
 
-    val favoriteMovies: StateFlow<ShowMovies> = combine(
+    val favoriteMovies: StateFlow<FavouriteStateUi> = combine(
         _snackBar,
         favoriteUseCase.getFavorites(),
         _movies
     ) { snackBar, result, movies ->
-        ShowMovies(
-            movies = result.map {
-                MovieCardModel(
-                    id = it.id,
-                    text = it.title,
-                    poster = it.posterPath,
-                    isFavourite = it.isFavourite,
-                    releaseDate = it.releaseDate,
-                    overView = it.overview,
-                    mustShowDetail = movies.contains(it.id),
-                    showDetail = { id ->
-                        _movies.value = if (movies.contains(id)) {
-                            movies.filter { v -> v != id }
-                        } else {
-                            movies.plus(id)
+        if (result is DomainResponse.Success) {
+            ShowMovies(
+                movies = result.data.map {
+                    MovieCardModel(
+                        id = it.id,
+                        text = it.title,
+                        poster = it.posterPath,
+                        isFavourite = it.isFavourite,
+                        releaseDate = it.releaseDate,
+                        overView = it.overview,
+                        mustShowDetail = movies.contains(it.id),
+                        showDetail = { id ->
+                            _movies.value = if (movies.contains(id)) {
+                                movies.filter { v -> v != id }
+                            } else {
+                                movies.plus(id)
+                            }
                         }
+                    ) { id, _ ->
+                        setFavouriteId(id)
+                        _snackBar.value = true
                     }
-                ) { id, _ ->
-                    setFavouriteId(id)
-                    _snackBar.value = true
+                },
+                snackBarModel = SnackBarModel(snackBar) {
+                    _snackBar.value = false
                 }
-            },
-            snackBarModel = SnackBarModel(snackBar) {
-                _snackBar.value = false
-            }
-        )
+            )
+        } else if (result is DomainResponse.Error) {
+            FavouriteStateUi.Error
+        } else {
+            FavouriteStateUi.Loading
+        }
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(),
-        ShowMovies(movies = listOf(), snackBarModel = SnackBarModel(false) {})
+        FavouriteStateUi.Loading
     )
 
     private fun setFavouriteId(id: Int) {
@@ -70,6 +77,8 @@ class FavoriteViewModel @Inject constructor(
 }
 
 sealed class FavouriteStateUi {
+    object Error: FavouriteStateUi()
+    object Loading: FavouriteStateUi()
     data class ShowMovies(
         val movies: List<MovieCardModel>?,
         val snackBarModel: SnackBarModel,

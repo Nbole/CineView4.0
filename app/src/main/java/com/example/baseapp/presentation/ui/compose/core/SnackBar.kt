@@ -42,7 +42,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-internal fun SnackBar(
+fun SnackBar(
     @StringRes stringRes: Int,
     @DrawableRes icon: Int,
     backgroundColor: Color,

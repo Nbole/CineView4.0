@@ -12,6 +12,7 @@ import com.example.baseapp.databinding.FavoriteFragmentBinding
 import com.example.baseapp.presentation.ui.compose.theme.DesignTheme
 import com.example.baseapp.presentation.ui.compose.ui.FavouriteCompose
 import com.example.baseapp.presentation.vm.FavoriteViewModel
+import com.example.baseapp.presentation.vm.FavouriteStateUi
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +34,9 @@ class FavoriteFragment : Fragment() {
         binding.cviewListing.setContent {
             DesignTheme {
                 val state = viewModel.favoriteMovies.collectAsState()
-                FavouriteCompose (state.value)
+                if (state.value is FavouriteStateUi.ShowMovies) {
+                    FavouriteCompose (state.value as FavouriteStateUi.ShowMovies)
+                }
             }
         }
     }

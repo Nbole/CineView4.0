@@ -14,17 +14,22 @@ import kotlinx.coroutines.flow.map
 inline fun <ResultType, RequestType> networkBoundResource(
     crossinline loadFromDb: () -> Flow<ResultType>,
     crossinline netWorkRequest: suspend () -> SerialResponse<RequestType>,
-    crossinline saveCall: suspend (SerialResponse<RequestType>) -> Unit
+    crossinline saveCall: suspend (SerialResponse<RequestType>) -> Unit,
+    crossinline shouldFetch: () -> Boolean = { true },
 ): Flow<NWResponse<ResultType>> = flow {
     emit(NWResponse.Loading(loadFromDb().firstOrNull()))
-    val netWorkSerialResponse: SerialResponse<RequestType> = netWorkRequest()
-    emitAll(
-        if (netWorkSerialResponse is SerialResponse.Success) {
-            saveCall(netWorkSerialResponse)
-            loadFromDb().map { NWResponse.Success(it) }
-        } else {
-            val error = netWorkSerialResponse as SerialResponse.Error
-            loadFromDb().map { NWResponse.Error(error.message, it) }
-        }
-    )
+    if (shouldFetch()) {
+        val netWorkSerialResponse: SerialResponse<RequestType> = netWorkRequest()
+        emitAll(
+            if (netWorkSerialResponse is SerialResponse.Success) {
+                saveCall(netWorkSerialResponse)
+                loadFromDb().map { NWResponse.Success(it) }
+            } else {
+                val error = netWorkSerialResponse as SerialResponse.Error
+                loadFromDb().map { NWResponse.Error(error.message, it) }
+            }
+        )
+    } else {
+        emitAll(loadFromDb().map { NWResponse.Success(it) })
+    }
 }

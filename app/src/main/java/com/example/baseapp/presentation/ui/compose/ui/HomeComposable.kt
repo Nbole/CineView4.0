@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,14 +20,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.baseapp.R
+import com.example.baseapp.presentation.model.SearchModel
+import com.example.baseapp.presentation.ui.compose.core.DismissText
 import com.example.baseapp.presentation.ui.compose.core.LoadingDialog
 import com.example.baseapp.presentation.ui.compose.core.SnackBar
 import com.example.baseapp.presentation.ui.compose.core.TextFieldComposable
 import com.example.baseapp.presentation.ui.compose.theme.Blue
-import com.example.baseapp.presentation.ui.compose.theme.GreenB
+import com.example.baseapp.presentation.ui.compose.theme.DesignTheme
 import com.example.baseapp.presentation.ui.compose.theme.LightGrey
 import com.example.baseapp.presentation.ui.compose.theme.Yellow
 import com.example.baseapp.presentation.vm.StateUi
@@ -36,7 +38,6 @@ import com.example.baseapp.presentation.vm.StateUi
 @Composable
 fun HomeComposable(stateUi: StateUi.ShowMovies) {
     val states = remember { mutableStateOf(stateUi) }
-    SideEffect { Log.d("NB", "HomeComposableRecompositions") }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -114,36 +115,19 @@ fun HomeComposable(stateUi: StateUi.ShowMovies) {
     }
 }
 
-@Composable
-fun DismissText(
-    scrollProvider: () -> Int,
-    indexProvider: () -> Int,
-) {
-    val s: Float = if (indexProvider() == 0) scrollProvider().toFloat() / 100F else 0F
-    Text(
-        text = "CineView 4.0",
-        color = Color.White,
-        fontSize = 30.sp,
-        modifier = Modifier.graphicsLayer {
-            alpha = 1 - s
-        }
-    )
-}
-
-/*
 @Preview
 @Composable
 fun PreviewHomeComposable() {
     DesignTheme {
-        HomeComposable {
+        HomeComposable(
             StateUi.ShowMovies(
                 isLoading = false,
                 movies = emptyList(),
                 snackBarModel = null,
                 searchModel = SearchModel(
                     errorResource = null,
-                    titleResource = R.string.favoritos,
-                    labelResource = R.string.favoritos,
+                    titleResource = R.string.pelicula_removida,
+                    labelResource = R.string.pelicula_removida,
                     validateResource = null,
                     enabled = true,
                     validateOrRemove = true,
@@ -152,7 +136,6 @@ fun PreviewHomeComposable() {
                     acceptActionable = {}
                 )
             )
-        }
+        )
     }
 }
-*/

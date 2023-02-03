@@ -5,6 +5,7 @@ import com.example.baseapp.data.local.model.db.Movie
 import com.example.baseapp.data.local.model.db.MovieEntity
 import com.example.baseapp.data.local.model.db.SearchMovieEntity
 import com.example.baseapp.data.local.networkBoundResource
+import com.example.baseapp.data.remote.NWResponse
 import com.example.baseapp.data.remote.SerialResponse
 import com.example.baseapp.data.remote.mapResponse
 import com.example.baseapp.domain.MovieDataSource
@@ -59,20 +60,26 @@ class MovieRepositoryImpl @Inject constructor(
             }
         }
 
-    override fun getFavoritesMovies(): Flow<List<MovieResult>> {
-        return db.loadFavoriteMovies().map { w ->
-            w.map {
-                MovieResult(
-                    id = it.id,
-                    title = it.title,
-                    posterPath = it.posterPath,
-                    isFavourite = true,
-                    releaseDate = it.releaseDate,
-                    overview = it.overView
-                )
-            }
-        }
-    }
+    override fun getFavoritesMovies(): Flow<NWResponse<List<MovieResult>>> =
+        networkBoundResource(
+            {
+                db.loadFavoriteMovies().map { w ->
+                    w.map {
+                        MovieResult(
+                            id = it.id,
+                            title = it.title,
+                            posterPath = it.posterPath,
+                            isFavourite = true,
+                            releaseDate = it.releaseDate,
+                            overview = it.overView
+                        )
+                    }
+                }
+            },
+            { movieDataSource.getLatestMovies() },
+            {},
+            { false }
+        )
 
     override fun searchMovies(query: String): Flow<DomainResponse<List<MovieResult>>> =
         networkBoundResource(
